@@ -1,0 +1,13 @@
+# Prove
+.prove
+
+# Devel::Cover
+cover_db/
+
+# Devel::NYTProf
+nytprof/
+nytprof.out
+
+# Dizt::Zilla
+*.gz
+/.build/
