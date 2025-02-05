@@ -4,7 +4,7 @@ Mojolicious::Plugin::CaptchaPNG - PNG captcha generation and validation Mojolici
 
 # VERSION
 
-version 1.02
+version 1.03
 
 [![test](https://github.com/gryphonshafer/Mojo-Plugin-CaptchaPNG/workflows/test/badge.svg)](https://github.com/gryphonshafer/Mojo-Plugin-CaptchaPNG/actions?query=workflow%3Atest)
 [![codecov](https://codecov.io/gh/gryphonshafer/Mojo-Plugin-CaptchaPNG/graph/badge.svg)](https://codecov.io/gh/gryphonshafer/Mojo-Plugin-CaptchaPNG)
@@ -176,6 +176,13 @@ This method (expected to be used in a [Mojolicious](https://metacpan.org/pod/Moj
 stored captcha value from the most recent image generation.
 
     my $captcha_value = $app->get_captcha_value;
+
+## set\_captcha\_value
+
+This method (likely never used, but if used would be expected to be used in a
+[Mojolicious](https://metacpan.org/pod/Mojolicious) controller) will set a captcha value.
+
+    $app->set_captcha_value(42);
 
 ## check\_captcha\_value
 

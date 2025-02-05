@@ -85,6 +85,13 @@ sub register {
     );
 
     $app->helper(
+        set_captcha_value => sub {
+            $_[0]->session( $settings->{key} => $_[1] );
+            return;
+        }
+    );
+
+    $app->helper(
         clear_captcha_value => sub {
             delete $_[0]->session->{ $settings->{key} };
             return;
@@ -297,6 +304,13 @@ This method (expected to be used in a L<Mojolicious> controller) will return the
 stored captcha value from the most recent image generation.
 
     my $captcha_value = $app->get_captcha_value;
+
+=head2 set_captcha_value
+
+This method (likely never used, but if used would be expected to be used in a
+L<Mojolicious> controller) will set a captcha value.
+
+    $app->set_captcha_value(42);
 
 =head2 check_captcha_value
 
