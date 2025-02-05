@@ -1,5 +1,5 @@
-package Mojolicious::Plugin::Captcha;
-# ABSTRACT: Captcha generation and validation Mojolicious plugin
+package Mojolicious::Plugin::CaptchaPNG;
+# ABSTRACT: PNG captcha generation and validation Mojolicious plugin
 
 use 5.024;
 use strict;
@@ -14,7 +14,7 @@ use Mojo::Exception;
 my $settings = {
     method      => 'any',
     path        => '/captcha',
-    key         => '_mojo_plugin_captcha',
+    key         => '_plugin_captchapng',
     width       => 230,
     height      => 50,
     size        => 20,
@@ -52,7 +52,7 @@ sub register {
         my $value  = $settings->{value}->();
 
         $app->log->warn(
-            'Mojolicious::Plugin::Captcha unable to read TTF font file, ' .
+            'Mojolicious::Plugin::CaptchaPNG unable to read TTF font file, ' .
             'which will likely result in a blank captcha; "ttf" setting = ' .
             ( $settings->{ttf} // '>>undef<<' )
         ) unless ( defined $settings->{ttf} and -r $settings->{ttf} );
@@ -118,8 +118,8 @@ __END__
 =begin :badges
 
 =for markdown
-[![test](https://github.com/gryphonshafer/Mojo-Plugin-Captcha/workflows/test/badge.svg)](https://github.com/gryphonshafer/Mojo-Plugin-Captcha/actions?query=workflow%3Atest)
-[![codecov](https://codecov.io/gh/gryphonshafer/Mojo-Plugin-Captcha/graph/badge.svg)](https://codecov.io/gh/gryphonshafer/Mojo-Plugin-Captcha)
+[![test](https://github.com/gryphonshafer/Mojo-Plugin-CaptchaPNG/workflows/test/badge.svg)](https://github.com/gryphonshafer/Mojo-Plugin-CaptchaPNG/actions?query=workflow%3Atest)
+[![codecov](https://codecov.io/gh/gryphonshafer/Mojo-Plugin-CaptchaPNG/graph/badge.svg)](https://codecov.io/gh/gryphonshafer/Mojo-Plugin-CaptchaPNG)
 
 =end :badges
 
@@ -133,7 +133,7 @@ my($app);
 =head1 SYNOPSIS
 
     # Simple Mojolicious
-    $app->plugin( Captcha => { ttf => 'font.ttf' } );
+    $app->plugin( CaptchaPNG => { ttf => 'font.ttf' } );
 
     my $captcha_value = $app->get_captcha_value;
     my $success = $app->check_captcha_value($captcha_value);
@@ -141,11 +141,11 @@ my($app);
 
     # Customized Mojolicious
     use Math::Random::Secure 'rand';
-    $app->plugin( Captcha => {
+    $app->plugin( CaptchaPNG => {
         routes      => $app->routes,
         method      => 'any',
         path        => '/captcha',
-        key         => '_mojo_plugin_captcha',
+        key         => '_plugin_captchapng',
         width       => 230,
         height      => 50,
         ttf         => 'font.ttf',
@@ -168,7 +168,7 @@ my($app);
     } );
 
     # Mojolicious::Lite
-    plugin( Captcha => { ttf => 'font.ttf' } );
+    plugin( CaptchaPNG => { ttf => 'font.ttf' } );
 
 =head1 DESCRIPTION
 
@@ -209,7 +209,7 @@ C</captcha>.
 =head2 key
 
 When a captcha image is generated, the value of the captcha text is stored in
-the session under this key. If not set, it defaults to C<_mojo_plugin_captcha>.
+the session under this key. If not set, it defaults to C<_plugin_captchapng>.
 
 =head2 width, height
 
@@ -321,11 +321,11 @@ L<Mojolicious>, L<Mojolicious::Plugin>.
 You can also look for additional information at:
 
 =for :list
-* L<GitHub|https://github.com/gryphonshafer/Mojo-Plugin-Captcha>
-* L<MetaCPAN|https://metacpan.org/pod/Mojolicious::Plugin::Captcha>
-* L<GitHub Actions|https://github.com/gryphonshafer/Mojo-Plugin-Captcha/actions>
-* L<Codecov|https://codecov.io/gh/gryphonshafer/Mojo-Plugin-Captcha>
-* L<CPANTS|http://cpants.cpanauthors.org/dist/Mojo-Plugin-Captcha>
-* L<CPAN Testers|http://www.cpantesters.org/distro/M/Mojo-Plugin-Captcha.html>
+* L<GitHub|https://github.com/gryphonshafer/Mojo-Plugin-CaptchaPNG>
+* L<MetaCPAN|https://metacpan.org/pod/Mojolicious::Plugin::CaptchaPNG>
+* L<GitHub Actions|https://github.com/gryphonshafer/Mojo-Plugin-CaptchaPNG/actions>
+* L<Codecov|https://codecov.io/gh/gryphonshafer/Mojo-Plugin-CaptchaPNG>
+* L<CPANTS|http://cpants.cpanauthors.org/dist/Mojo-Plugin-CaptchaPNG>
+* L<CPAN Testers|http://www.cpantesters.org/distro/M/Mojo-Plugin-CaptchaPNG.html>
 
 =cut
