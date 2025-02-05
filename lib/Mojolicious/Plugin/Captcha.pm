@@ -1,7 +1,7 @@
 package Mojolicious::Plugin::Captcha;
 # ABSTRACT: Captcha generation and validation Mojolicious plugin
 
-use 5.010;
+use 5.024;
 use strict;
 use warnings;
 use GD::Image;
