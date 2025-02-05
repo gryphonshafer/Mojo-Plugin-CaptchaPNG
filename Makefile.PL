@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use 5.010;
+use 5.024;
 
 use ExtUtils::MakeMaker;
 
@@ -14,10 +14,9 @@ my %WriteMakefileArgs = (
   },
   "DISTNAME" => "Mojolicious-Plugin-Captcha",
   "LICENSE" => "artistic_2",
-  "MIN_PERL_VERSION" => "5.010",
+  "MIN_PERL_VERSION" => "5.024",
   "NAME" => "Mojolicious::Plugin::Captcha",
   "PREREQ_PM" => {
-    "GD" => "2.83",
     "GD::Image" => 0,
     "Math::Random::Secure" => 0,
     "Mojo::Base" => 0,
@@ -34,7 +33,7 @@ my %WriteMakefileArgs = (
     "Test2::V0" => 0,
     "Test::More" => 0
   },
-  "VERSION" => "0.001",
+  "VERSION" => "1.01",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -43,7 +42,6 @@ my %WriteMakefileArgs = (
 
 my %FallbackPrereqs = (
   "File::Spec" => 0,
-  "GD" => "2.83",
   "GD::Image" => 0,
   "IO::Handle" => 0,
   "IPC::Open3" => 0,
