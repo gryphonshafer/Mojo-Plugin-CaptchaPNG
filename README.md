@@ -24,7 +24,7 @@ version 1.02
         routes      => $app->routes,
         method      => 'any',
         path        => '/captcha',
-        key         => '_mojo_plugin_captcha',
+        key         => '_plugin_captchapng',
         width       => 230,
         height      => 50,
         ttf         => 'font.ttf',
@@ -88,7 +88,7 @@ The value to use when setting up the route path. If not set, it defaults to
 ## key
 
 When a captcha image is generated, the value of the captcha text is stored in
-the session under this key. If not set, it defaults to `_mojo_plugin_captcha`.
+the session under this key. If not set, it defaults to `_plugin_captchapng`.
 
 ## width, height
 
