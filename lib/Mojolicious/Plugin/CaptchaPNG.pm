@@ -5,7 +5,6 @@ use 5.024;
 use strict;
 use warnings;
 use GD::Image;
-use Math::Random::Secure 'rand';
 use Mojo::Base 'Mojolicious::Plugin';
 use Mojo::Exception;
 
