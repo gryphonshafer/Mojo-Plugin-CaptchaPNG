@@ -4,7 +4,7 @@ Mojolicious::Plugin::CaptchaPNG - PNG captcha generation and validation Mojolici
 
 # VERSION
 
-version 1.05
+version 1.06
 
 [![test](https://github.com/gryphonshafer/Mojo-Plugin-CaptchaPNG/workflows/test/badge.svg)](https://github.com/gryphonshafer/Mojo-Plugin-CaptchaPNG/actions?query=workflow%3Atest)
 [![codecov](https://codecov.io/gh/gryphonshafer/Mojo-Plugin-CaptchaPNG/graph/badge.svg)](https://codecov.io/gh/gryphonshafer/Mojo-Plugin-CaptchaPNG)
@@ -34,10 +34,16 @@ version 1.05
         y_rotate    => 100,
         noise       => 1_250,
         background  => [ 255, 255, 255 ],
-        text_color  => [ 'rand(128)', 'rand(128)', 'rand(128)' ],
-        noise_color => [ 'rand(128) + 128', 'rand(128) + 128', 'rand(128) + 128' ],
-        value       => sub { int( rand( 10_000_000 - 1_000_000 ) ) + 1_000_000 },
-        display     => sub {
+        text_color  => [ 'urand(128)', 'urand(128)', 'urand(128)' ],
+        noise_color => [ 'urand(128) + 128', 'urand(128) + 128', 'urand(128) + 128' ],
+        value       => sub {
+            return int(
+                Mojolicious::Plugin::CaptchaPNG::urand(
+                    10_000_000 - 1_000_000
+                )
+            ) + 1_000_000;
+        },
+        display => sub {
             my ($display) = @_;
             $display =~ s/^(\d{2})(\d{3})/$1-$2-/;
             $display =~ s/(.)/ $1/g;
@@ -137,7 +143,9 @@ An array reference of 3 expressions, which will be used to set the color of the
 text in the image. Values will be evaluated before used. If not set, it defaults
 to:
 
-    [ 'rand(128)', 'rand(128)', 'rand(128)' ]
+    [ 'urand(128)', 'urand(128)', 'urand(128)' ]
+
+Note that `urand` is provided by this library. See below.
 
 ## noise\_color
 
@@ -145,14 +153,22 @@ An array reference of 3 valexpressionses, which will be used to set the color of
 the noise color in the image. Values will be evaluated before used. If not set,
 it defaults to:
 
-    [ 'rand(128) + 128', 'rand(128) + 128', 'rand(128) + 128' ]
+    [ 'urand(128) + 128', 'urand(128) + 128', 'urand(128) + 128' ]
+
+Note that `urand` is provided by this library. See below.
 
 ## value
 
 A subroutine reference that will be called to generate the value used for the
 text of the captcha. If not set, it defaults to:
 
-    sub { int( rand( 10_000_000 - 1_000_000 ) ) + 1_000_000 }
+    sub {
+        return int(
+            Mojolicious::Plugin::CaptchaPNG::urand(
+                10_000_000 - 1_000_000
+            )
+        ) + 1_000_000;
+    }
 
 ## display
 
@@ -198,6 +214,13 @@ On success, the captcha value is removed from the session.
 Removes the captcha value from the session.
 
     $app->clear_captcha_value;
+
+# OTHER METHOD
+
+## urand
+
+This method is a functional replacement of the core `rand` but using
+[Crypt::URandom](https://metacpan.org/pod/Crypt%3A%3AURandom) for randomness.
 
 # SEE ALSO
 

@@ -4,6 +4,7 @@ package Mojolicious::Plugin::CaptchaPNG;
 use 5.024;
 use strict;
 use warnings;
+use Crypt::URandom;
 use GD::Image;
 use Mojo::Base 'Mojolicious::Plugin';
 use Mojo::Exception;
@@ -23,9 +24,9 @@ my $settings = {
     y_rotate    => 100,
     noise       => 1_250,
     background  => [ 255, 255, 255 ],
-    text_color  => [ 'rand(128)', 'rand(128)', 'rand(128)' ],
-    noise_color => [ 'rand(128) + 128', 'rand(128) + 128', 'rand(128) + 128' ],
-    value       => sub { int( rand( 10_000_000 - 1_000_000 ) ) + 1_000_000 },
+    text_color  => [ 'urand(128)', 'urand(128)', 'urand(128)' ],
+    noise_color => [ 'urand(128) + 128', 'urand(128) + 128', 'urand(128) + 128' ],
+    value       => sub { int( urand( 10_000_000 - 1_000_000 ) ) + 1_000_000 },
     display     => sub {
         my ($display) = @_;
         $display =~ s/^(\d{2})(\d{3})/$1-$2-/;
@@ -33,6 +34,13 @@ my $settings = {
         return $display;
     },
 };
+
+sub urand {
+    my ($max) = @_;
+    $max = 1 unless defined $max;
+    $max = abs($max);
+    return unpack( 'Q>', Crypt::URandom::urandom(8) ) / ( 2 ** 64 ) * $max;
+}
 
 sub register {
     my ( $self, $app, $overrides ) = @_;
@@ -47,7 +55,7 @@ sub register {
         my ($c) = @_;
 
         my $image  = GD::Image->new( $settings->{width}, $settings->{height} );
-        my $rotate = rand() / $settings->{rotation} * ( ( rand() > 0.5 ) ? 1 : -1 );
+        my $rotate = urand() / $settings->{rotation} * ( ( urand() > 0.5 ) ? 1 : -1 );
         my $value  = $settings->{value}->();
 
         $app->log->warn(
@@ -69,7 +77,7 @@ sub register {
 
         for ( 1 .. 10 ) {
             my $index = $image->colorAllocate( map { eval $_ } $settings->{noise_color}->@* );
-            $image->setPixel( rand( $settings->{width} ), rand( $settings->{width} ), $index )
+            $image->setPixel( urand( $settings->{width} ), urand( $settings->{width} ), $index )
                 for ( 1 .. $settings->{noise} );
         }
 
@@ -161,10 +169,16 @@ my($app);
         y_rotate    => 100,
         noise       => 1_250,
         background  => [ 255, 255, 255 ],
-        text_color  => [ 'rand(128)', 'rand(128)', 'rand(128)' ],
-        noise_color => [ 'rand(128) + 128', 'rand(128) + 128', 'rand(128) + 128' ],
-        value       => sub { int( rand( 10_000_000 - 1_000_000 ) ) + 1_000_000 },
-        display     => sub {
+        text_color  => [ 'urand(128)', 'urand(128)', 'urand(128)' ],
+        noise_color => [ 'urand(128) + 128', 'urand(128) + 128', 'urand(128) + 128' ],
+        value       => sub {
+            return int(
+                Mojolicious::Plugin::CaptchaPNG::urand(
+                    10_000_000 - 1_000_000
+                )
+            ) + 1_000_000;
+        },
+        display => sub {
             my ($display) = @_;
             $display =~ s/^(\d{2})(\d{3})/$1-$2-/;
             $display =~ s/(.)/ $1/g;
@@ -264,7 +278,9 @@ An array reference of 3 expressions, which will be used to set the color of the
 text in the image. Values will be evaluated before used. If not set, it defaults
 to:
 
-    [ 'rand(128)', 'rand(128)', 'rand(128)' ]
+    [ 'urand(128)', 'urand(128)', 'urand(128)' ]
+
+Note that C<urand> is provided by this library. See below.
 
 =head2 noise_color
 
@@ -272,14 +288,22 @@ An array reference of 3 valexpressionses, which will be used to set the color of
 the noise color in the image. Values will be evaluated before used. If not set,
 it defaults to:
 
-    [ 'rand(128) + 128', 'rand(128) + 128', 'rand(128) + 128' ]
+    [ 'urand(128) + 128', 'urand(128) + 128', 'urand(128) + 128' ]
+
+Note that C<urand> is provided by this library. See below.
 
 =head2 value
 
 A subroutine reference that will be called to generate the value used for the
 text of the captcha. If not set, it defaults to:
 
-    sub { int( rand( 10_000_000 - 1_000_000 ) ) + 1_000_000 }
+    sub {
+        return int(
+            Mojolicious::Plugin::CaptchaPNG::urand(
+                10_000_000 - 1_000_000
+            )
+        ) + 1_000_000;
+    }
 
 =head2 display
 
@@ -325,6 +349,13 @@ On success, the captcha value is removed from the session.
 Removes the captcha value from the session.
 
     $app->clear_captcha_value;
+
+=head1 OTHER METHOD
+
+=head2 urand
+
+This method is a functional replacement of the core C<rand> but using
+L<Crypt::URandom> for randomness.
 
 =head1 SEE ALSO
 
