@@ -4,7 +4,7 @@ Mojolicious::Plugin::CaptchaPNG - PNG captcha generation and validation Mojolici
 
 # VERSION
 
-version 1.04
+version 1.05
 
 [![test](https://github.com/gryphonshafer/Mojo-Plugin-CaptchaPNG/workflows/test/badge.svg)](https://github.com/gryphonshafer/Mojo-Plugin-CaptchaPNG/actions?query=workflow%3Atest)
 [![codecov](https://codecov.io/gh/gryphonshafer/Mojo-Plugin-CaptchaPNG/graph/badge.svg)](https://codecov.io/gh/gryphonshafer/Mojo-Plugin-CaptchaPNG)
@@ -19,7 +19,6 @@ version 1.04
     $app->clear_captcha_value;
 
     # Customized Mojolicious
-    use Math::Random::Secure 'rand';
     $app->plugin( CaptchaPNG => {
         routes      => $app->routes,
         method      => 'any',

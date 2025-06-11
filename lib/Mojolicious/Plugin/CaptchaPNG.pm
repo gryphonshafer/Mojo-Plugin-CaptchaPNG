@@ -146,7 +146,6 @@ my($app);
     $app->clear_captcha_value;
 
     # Customized Mojolicious
-    use Math::Random::Secure 'rand';
     $app->plugin( CaptchaPNG => {
         routes      => $app->routes,
         method      => 'any',
