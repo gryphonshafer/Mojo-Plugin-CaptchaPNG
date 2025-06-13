@@ -35,11 +35,13 @@ my $settings = {
     },
 };
 
-sub urand {
-    my ($max) = @_;
-    $max = 1 unless defined $max;
-    $max = abs($max);
-    return unpack( 'Q>', Crypt::URandom::urandom(8) ) / ( 2 ** 64 ) * $max;
+use constant SIZE => 1 << 31;
+use constant MASK => SIZE - 1;
+
+sub urand(;$) {
+    my $a = shift || 1;
+    my ($b) = unpack( 'N', Crypt::URandom::urandom(4) ) & MASK;
+    return $a * $b / SIZE;
 }
 
 sub register {
