@@ -4,7 +4,7 @@ Mojolicious::Plugin::CaptchaPNG - PNG captcha generation and validation Mojolici
 
 # VERSION
 
-version 1.07
+version 1.08
 
 [![test](https://github.com/gryphonshafer/Mojo-Plugin-CaptchaPNG/workflows/test/badge.svg)](https://github.com/gryphonshafer/Mojo-Plugin-CaptchaPNG/actions?query=workflow%3Atest)
 [![codecov](https://codecov.io/gh/gryphonshafer/Mojo-Plugin-CaptchaPNG/graph/badge.svg)](https://codecov.io/gh/gryphonshafer/Mojo-Plugin-CaptchaPNG)
@@ -36,6 +36,7 @@ version 1.07
         background  => [ 255, 255, 255 ],
         text_color  => [ 'urand(128)', 'urand(128)', 'urand(128)' ],
         noise_color => [ 'urand(128) + 128', 'urand(128) + 128', 'urand(128) + 128' ],
+        min_entropy => 40,
         value       => sub {
             return int(
                 Mojolicious::Plugin::CaptchaPNG::urand(
@@ -64,6 +65,13 @@ During registration (when `plugin` is called), the plugin will setup a route
 The image is generated using [GD::Image](https://metacpan.org/pod/GD%3A%3AImage). The plugin will also setup helper
 methods to get, check, and clear the captcha value, which is stored in the
 session.
+
+Note that the assumption herein is that you're using Mojolicious verison 9.39 or
+higher with [Mojolicious::Sessions](https://metacpan.org/pod/Mojolicious%3A%3ASessions)'s `encrypted` on. If so, the application's
+Mojolicious secrets are checked for strong entropy and a warning is issued if
+any have low entropy. (See `min_entropy` below.) If not, then its expected
+you'll provide your own captcha value encryption. (See `encrypt` and `decrypt`
+below.)
 
 # SETTINGS
 
@@ -157,6 +165,13 @@ it defaults to:
 
 Note that `urand` is provided by this library. See below.
 
+## min\_entropy
+
+This is the minimum entropy level the application's Mojolicious secrets need to
+achieve to avoid this plugin logging a warning. The default threshold is 40.
+
+Note that `min_entropy` is ignored if `encrypt` and `decrypt` are provided.
+
 ## value
 
 A subroutine reference that will be called to generate the value used for the
@@ -182,6 +197,12 @@ or dashes or other such things. If not set, it defaults to:
         $display =~ s/(.)/ $1/g;
         return $display;
     }
+
+## encrypt, decrypt
+
+If these are set to subroutine references, they will be called to encrypt and
+decrypt the value into and out of the session. They are passed the value to
+encrypt or decrypt.
 
 # HELPER METHODS
 
