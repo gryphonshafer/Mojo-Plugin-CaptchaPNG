@@ -4,7 +4,7 @@ Mojolicious::Plugin::CaptchaPNG - PNG captcha generation and validation Mojolici
 
 # VERSION
 
-version 1.08
+version 1.09
 
 [![test](https://github.com/gryphonshafer/Mojo-Plugin-CaptchaPNG/workflows/test/badge.svg)](https://github.com/gryphonshafer/Mojo-Plugin-CaptchaPNG/actions?query=workflow%3Atest)
 [![codecov](https://codecov.io/gh/gryphonshafer/Mojo-Plugin-CaptchaPNG/graph/badge.svg)](https://codecov.io/gh/gryphonshafer/Mojo-Plugin-CaptchaPNG)
@@ -258,7 +258,7 @@ You can also look for additional information at:
 
 # AUTHOR
 
-Gryphon Shafer <gryphon@cpan.org>
+Gryphon Shafer <gryphon@goldenguru.com>
 
 # COPYRIGHT AND LICENSE
 
